@@ -139,28 +139,22 @@
     switch (self.moviePlayer.playbackState) {
 //            self.moviePlayer.loadState
         case MPMoviePlaybackStatePlaying:
-            NSLog(@"正在播放...");
             break;
         case MPMoviePlaybackStatePaused:
-            NSLog(@"暂停播放.");
             break;
         case MPMoviePlaybackStateStopped:
-            NSLog(@"停止播放.");
             [self close];
             break;
         case MPMoviePlaybackStateSeekingForward:
-            NSLog(@"kuaijin播放.");
             break;
         case MPMoviePlaybackStateSeekingBackward:
-            NSLog(@"kuaitui播放.");
             break;
         case MPMoviePlaybackStateInterrupted:
-            NSLog(@"打断了播放.");
             self.playback(@{@"error":@{@"msg":@"MEDIA_ABORTED",@"code":@110090}},nil);
             [self.moviePlayer pause];
             break;
         default:
-            NSLog(@"播放状态:%li",self.moviePlayer.playbackState);
+            
             break;
     }
     
