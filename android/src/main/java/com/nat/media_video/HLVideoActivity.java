@@ -138,7 +138,13 @@ public class HLVideoActivity extends AppCompatActivity {
                             }
                             @Override
                             public boolean isPlaying() {
-                                return mMediaPlayer.isPlaying();
+                                boolean isPlaying = true;
+                                try {
+                                    isPlaying = mMediaPlayer.isPlaying();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                return isPlaying;
 
                             }
 
@@ -227,8 +233,12 @@ public class HLVideoActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (mMediaPlayer != null) {
-            mMediaPlayer.stop();
-            mMediaPlayer.release();
+            try {
+                mMediaPlayer.stop();
+                mMediaPlayer.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
