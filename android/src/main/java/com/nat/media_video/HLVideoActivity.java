@@ -112,29 +112,51 @@ public class HLVideoActivity extends AppCompatActivity {
                         mController.setMediaPlayer(new Controller.ControlOper() {
                             @Override
                             public void start() {
-                                mMediaPlayer.start();
+                                try {
+                                    mMediaPlayer.start();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                             @Override
                             public void pause() {
-                                mMediaPlayer.pause();
+                                try {
+                                    mMediaPlayer.pause();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                             @Override
                             public int getDuration() {
-                                return mMediaPlayer.getDuration();
+                                int duration = 0;
+                                try {
+                                    duration = mMediaPlayer.getDuration();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                return duration;
                             }
 
                             @Override
                             public int getCurPosition() {
-                                return mMediaPlayer.getCurrentPosition();
+                                int position = 0;
+                                try {
+                                    position = mMediaPlayer.getCurrentPosition();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                return position;
                             }
 
                             @Override
                             public void seekTo(int i) {
-
-                                mMediaPlayer.seekTo(i);
-
+                                try {
+                                    mMediaPlayer.seekTo(i);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                             @Override
                             public boolean isPlaying() {
