@@ -32,28 +32,28 @@ public class Controller extends RelativeLayout{
         private static final int    DEFTIMEOUT = 3000;
         private static final int    SHOW_PROGRESS = 2;
 
-        private ImageButton mBtnPause;
-        private ImageButton         mBtnFfwd;
-        private ImageButton         mBtnRew;
-        private ImageButton         mBtnNext;
-        private ImageButton         mBtnPrev;
-        private ImageButton         mBtnFullscreen;
+        private ImageButton     mBtnPause;
+        private ImageButton     mBtnFfwd;
+        private ImageButton     mBtnRew;
+        private ImageButton     mBtnNext;
+        private ImageButton     mBtnPrev;
+        private ImageButton     mBtnFullscreen;
         private Handler mHandler = new MsgHandler(this);
 
-        private ControlOper             mPlayerCtrl;
-        private Context mContext;
-        private RelativeLayout mAnchorVGroup;
-        private View mRootView;
-        private SeekBar mProgress;
-        private TextView mEndTime, mCurTime;
-        private boolean             mIsShowing;
-        private boolean             mIsDragging;
-        private boolean             mUseFastForward;
-        private boolean             mFromXml;
-        private boolean             mIsListenersSet;
+        private ControlOper     mPlayerCtrl;
+        private Context         mContext;
+        private RelativeLayout  mAnchorVGroup;
+        private View            mRootView;
+        private SeekBar         mProgress;
+        private TextView        mEndTime, mCurTime;
+        private boolean         mIsShowing;
+        private boolean         mIsDragging;
+        private boolean         mUseFastForward;
+        private boolean         mFromXml;
+        private boolean         mIsListenersSet;
         private OnClickListener mNextListener, mPrevListener;
-        StringBuilder               mStrBuilder;
-        Formatter mFormatter;
+        StringBuilder           mStrBuilder;
+        Formatter               mFormatter;
 
         public Controller(Context context) {
             this(context, true);
@@ -99,7 +99,7 @@ public class Controller extends RelativeLayout{
             mAnchorVGroup = view;
             LayoutParams frameParams = new LayoutParams(
                     LayoutParams.MATCH_PARENT,
-                    (int) HLUtil.dp2px(mContext, 100)
+                    (int) Util.dp2px(mContext, 100)
             );
             frameParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             removeAllViews();
@@ -221,7 +221,7 @@ public class Controller extends RelativeLayout{
 //                );
                 LayoutParams frameParams = new LayoutParams(
                         LayoutParams.MATCH_PARENT,
-                        (int) HLUtil.dp2px(mContext, 100)
+                        (int) Util.dp2px(mContext, 100)
                 );
                 frameParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 
@@ -386,9 +386,9 @@ public class Controller extends RelativeLayout{
             }
 
             if (mPlayerCtrl.isPlaying()) {
-                mBtnPause.setImageResource(android.R.drawable.ic_media_play);
-            } else {
                 mBtnPause.setImageResource(android.R.drawable.ic_media_pause);
+            } else {
+                mBtnPause.setImageResource(android.R.drawable.ic_media_play);
             }
         }
 
@@ -398,11 +398,9 @@ public class Controller extends RelativeLayout{
             }
 
             if (mPlayerCtrl.isFullScreen()) {
-//                mBtnFullscreen.setImageResource(R.drawable.nscale);
                 System.out.println("MediaController fullScreen" + "true");
             }
             else {
-//                mBtnFullscreen.setImageResource(R.drawable.scale);
                 System.out.println("MediaController fullScreen" + "false");
             }
         }
@@ -608,9 +606,7 @@ public class Controller extends RelativeLayout{
                             return;
                         }
 
-                        if (!view.mIsDragging && view.mIsShowing
-                                && view.mPlayerCtrl.isPlaying()) {
-
+                        if (!view.mIsDragging && view.mIsShowing && view.mPlayerCtrl.isPlaying()) {
                             msg = obtainMessage(SHOW_PROGRESS);
                             sendMessageDelayed(msg, 1000 - (pos % 1000));
                         }

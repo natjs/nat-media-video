@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -19,7 +20,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 
-public class HLVideoActivity extends AppCompatActivity {
+public class VideoActivity extends AppCompatActivity {
     private SurfaceView mSurfaceView;
     private MediaPlayer mMediaPlayer;
     String path = "";
@@ -30,7 +31,8 @@ public class HLVideoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_hlvideo);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_video);
 
 
         Intent intent = getIntent();
@@ -39,7 +41,7 @@ public class HLVideoActivity extends AppCompatActivity {
         }
 
         mSurfaceView = (SurfaceView) findViewById(R.id.surface);
-        mRootView = (RelativeLayout) findViewById(R.id.activity_hlvideo);
+        mRootView = (RelativeLayout) findViewById(R.id.activity_video);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         SurfaceHolder holder = mSurfaceView.getHolder();
 
@@ -51,7 +53,7 @@ public class HLVideoActivity extends AppCompatActivity {
                 mMediaPlayer.setLooping(true);
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mMediaPlayer.setScreenOnWhilePlaying(true);
-                mController = new Controller(HLVideoActivity.this);
+                mController = new Controller(VideoActivity.this);
                 mController.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -70,14 +72,14 @@ public class HLVideoActivity extends AppCompatActivity {
                     public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
                         switch (i1) {
                             case MediaPlayer.MEDIA_ERROR_IO:
-                                EventBus.getDefault().post(new MessageEvent(HLConstant.MEDIA_FILE_TYPE_NOT_SUPPORTED, HLVideoModule.VIDEO_EORRO));
+                                EventBus.getDefault().post(new MessageEvent(Constant.MEDIA_FILE_TYPE_NOT_SUPPORTED, VideoModule.VIDEO_EORRO));
                                 break;
                             case MediaPlayer.MEDIA_ERROR_MALFORMED:
                             case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:
-                                EventBus.getDefault().post(new MessageEvent(HLConstant.MEDIA_DECODE_ERROR, HLVideoModule.VIDEO_EORRO));
+                                EventBus.getDefault().post(new MessageEvent(Constant.MEDIA_DECODE_ERROR, VideoModule.VIDEO_EORRO));
                                 break;
                         }
-                        HLVideoActivity.this.finish();
+                        VideoActivity.this.finish();
                         return false;
                     }
                 });
@@ -88,12 +90,12 @@ public class HLVideoActivity extends AppCompatActivity {
                         int videoHeight = mMediaPlayer.getVideoHeight();
 
                         if (videoHeight == 0 || videoWidth == 0) {
-                            EventBus.getDefault().post(new MessageEvent(HLConstant.MEDIA_FILE_TYPE_NOT_SUPPORTED, HLVideoModule.VIDEO_EORRO));
-                            HLVideoActivity.this.finish();
+                            EventBus.getDefault().post(new MessageEvent(Constant.MEDIA_FILE_TYPE_NOT_SUPPORTED, VideoModule.VIDEO_EORRO));
+                            VideoActivity.this.finish();
                         }
 
-                        int screenWidth = HLUtil.getScreenWidth(HLVideoActivity.this);
-                        int screenHeight = HLUtil.getScreenHeight(HLVideoActivity.this);
+                        int screenWidth = Util.getScreenWidth(VideoActivity.this);
+                        int screenHeight = Util.getScreenHeight(VideoActivity.this);
                         if (videoHeight <= screenHeight || videoWidth <= screenWidth) {
                             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mSurfaceView.getLayoutParams();
                             double heightScale = videoHeight / (screenHeight + 0.0);
@@ -201,11 +203,13 @@ public class HLVideoActivity extends AppCompatActivity {
 
                             }
                         });
+
+                        mp.start();
+
                         mProgressBar.setVisibility(View.GONE);
                         mController.setKeepScreenOn(true);
                         mController.setAnchorView(mRootView);
                         mController.show();
-                        mp.start();
                     }
                 });
 
@@ -240,8 +244,7 @@ public class HLVideoActivity extends AppCompatActivity {
         try {
             mMediaPlayer.reset();
             mMediaPlayer.setDataSource(videoUrl);
-            mMediaPlayer.prepareAsync();//prepare之后自动播放
-            //mMediaPlayer.start();
+            mMediaPlayer.prepareAsync();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         } catch (IllegalStateException e) {
@@ -268,11 +271,11 @@ public class HLVideoActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(HLConstant.VIDEO_PAUSE_OPERATE)) {
+            if (action.equals(Constant.VIDEO_PAUSE_OPERATE)) {
                 if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
                     mMediaPlayer.pause();
                 }
-            } else if (action.equals(HLConstant.VIDEO_STOP_OPERATE)) {
+            } else if (action.equals(Constant.VIDEO_STOP_OPERATE)) {
                 if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
                     mMediaPlayer.stop();
                 }
@@ -284,8 +287,8 @@ public class HLVideoActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(HLConstant.VIDEO_PAUSE_OPERATE);
-        intentFilter.addAction(HLConstant.VIDEO_STOP_OPERATE);
+        intentFilter.addAction(Constant.VIDEO_PAUSE_OPERATE);
+        intentFilter.addAction(Constant.VIDEO_STOP_OPERATE);
         registerReceiver(mReceiver, intentFilter);
     }
 
